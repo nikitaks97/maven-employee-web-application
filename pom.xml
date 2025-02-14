@@ -86,20 +86,20 @@
         </dependencies>
         <repositories>
             <repository>
-              <id>nexus</id>
-              <url>${nexus.host.url}/repository/mvn-group/</url>
+              <id>maven_emp</id>
+              <url>https://pkgs.dev.azure.com/nikitaks997/github_practice/_packaging/maven_emp/maven/v1</url>
             </repository>
         </repositories>
         <distributionManagement>
                 <repository>
-                        <id>nexus</id>
+                        <id>maven_emp</id>
                         <name>Nexus Release Repository</name>
-                        <url>${nexus.host.url}/repository/mvn-hosted-releases/</url>
+                        <url>https://pkgs.dev.azure.com/nikitaks997/github_practice/_packaging/maven_emp/maven/v1/</url>
                 </repository>
                 <snapshotRepository>
-                        <id>nexus</id>
+                        <id>maven_emp</id>
                         <name>Nexus Snapshot Repository</name>
-                        <url>${nexus.host.url}/repository/mvn-hosted-snapshots/</url>
+                        <url>https://pkgs.dev.azure.com/nikitaks997/github_practice/_packaging/maven_emp/maven/v1</url>
                 </snapshotRepository>
         </distributionManagement>
 
