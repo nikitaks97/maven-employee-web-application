@@ -58,8 +58,8 @@ pipeline {
             }
         }
     }
-    */post {
-        always {
+    /* post {
+         always {
             script {
                 def qg = waitForQualityGate()
                 if (qg.status != 'OK') {
