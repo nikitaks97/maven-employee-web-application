@@ -40,29 +40,21 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube-server') {
+                withSonarQubeEnv(credentialsId: 'sonarqube-token', installationName: 'sonarqube-server') {
                     sh """
                         ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \\
                         -Dsonar.projectKey=jenkins \\
                         -Dsonar.sources=./src \\
                         -Dsonar.exclusions=**/*.java \\
-                        -Dsonar.host.url=http://172.17.0.3:9000 \\
-                        -Dsonar.login=${SONAR_TOKEN}
+                        -Dsonar.host.url=http://172.17.0.3:9000
                     """
                 }
             }
         }
         stage('Quality Gate') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    withSonarQubeEnv(installationName: 'sonarqube-server', credentialsId: 'sonarqube-token') {
-                        script {
-                            def qg = waitForQualityGate()
-                            if (qg.status != 'OK') {
-                                error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                            }
-                        }
-                    }
+                timeout(time: 15, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
