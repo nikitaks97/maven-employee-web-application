@@ -1,0 +1,68 @@
+pipeline {
+    agent {
+        docker {
+            image 'nikitaks997797/my-jenkins-node:latest' // 
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+    tools {
+        git 'Git'
+        maven 'maven3'
+    }
+    environment {
+        SONARQUBE_SCANNER_HOME = tool 'sonarqube'
+    }
+    stages {
+        stage('Git Checkout') {
+            steps {
+                script {
+                    git branch: 'master',
+                        credentialsId: 'Github_cred',
+                        url: 'https://github.com/nikitaks97/Maven_repository.git'
+           }
+        }
+     }
+   /*     stage('Run SAST') {
+            steps {
+                sh 'npx eslint.config.js.'
+            }
+        } */
+        stage('Build Application') {
+            steps {
+                sh 'mvn clean' 
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('My SonarQube Server') {
+                    sh "${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
+                        -Dsonar.projectKey=jenkins \
+                        -Dsonar.sources=./src \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=sonarqube_cred"
+                }
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                }
+            }
+            sh 'echo "Pipeline completed"'
+        }
+    }
+}
