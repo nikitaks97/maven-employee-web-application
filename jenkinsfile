@@ -29,12 +29,12 @@ pipeline {
         } */
         stage('Build Application') {
             steps {
-                sh 'mvn clean' 
+                sh 'mvn clean --no-transfer-progress  -Denforcer.skip=true' 
             }
         }
         stage('Run Tests') {
             steps {
-                sh 'mvn test'
+                sh 'mvn test --no-transfer-progress  -Denforcer.skip=true'
             }
         }
         stage('SonarQube Analysis') {
@@ -50,7 +50,7 @@ pipeline {
         }
         stage('Package') {
             steps {
-                sh 'mvn package'
+                sh 'mvn package --no-transfer-progress  -Denforcer.skip=true'
             }
         }
     }
