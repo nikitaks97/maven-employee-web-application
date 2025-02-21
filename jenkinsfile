@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'nikitaks997797/my-jenkins-node:latest' // 
+            image 'nikitaks997797/my-jenkins-node:latest'
             args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
@@ -11,31 +11,29 @@ pipeline {
     }
     environment {
         SONARQUBE_SCANNER_HOME = tool 'sonarqube'
-         SONAR_TOKEN = credentials('sonarqube-token')
+        SONAR_TOKEN = credentials('sonarqube-token')
     }
     stages {
         stage('Git Checkout') {
             steps {
                 script {
-                    git branch: 'master',
-                        credentialsId: 'Github_cred',
-                        url: 'https://github.com/nikitaks97/Maven_repository.git'
-           }
+                    git branch: 'master', credentialsId: 'Github_cred', url: 'https://github.com/nikitaks97/Maven_repository.git'
+                }
+            }
         }
-     }
-   /*     stage('Run SAST') {
+        /* stage('Run SAST') {
             steps {
                 sh 'npx eslint.config.js.'
             }
         } */
         stage('Build Application') {
             steps {
-                sh 'mvn clean --no-transfer-progress  -Denforcer.skip=true' 
+                sh 'mvn clean --no-transfer-progress -Denforcer.skip=true'
             }
         }
         stage('Run Tests') {
             steps {
-                sh 'mvn test --no-transfer-progress  -Denforcer.skip=true'
+                sh 'mvn test --no-transfer-progress -Denforcer.skip=true'
             }
         }
         stage('SonarQube Analysis') {
@@ -47,21 +45,24 @@ pipeline {
                         -Dsonar.java.binaries=target/classes \
                         -Dsonar.host.url=http://172.17.0.3:9000 \
                         -Dsonar.login=${SONAR_TOKEN}
-                        """
+                    """
                 }
             }
         }
         stage('Package') {
             steps {
-                sh 'mvn package --no-transfer-progress  -Denforcer.skip=true'
+                sh 'mvn package --no-transfer-progress -Denforcer.skip=true'
             }
         }
-       stage("Quality Gate"){
-         timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
-         def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-         if (qg.status != 'OK') {
-           error "Pipeline aborted due to quality gate failure: ${qg.status}"
-           }
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }
         }
     }
 }
