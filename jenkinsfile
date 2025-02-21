@@ -11,6 +11,7 @@ pipeline {
     }
     environment {
         SONARQUBE_SCANNER_HOME = tool 'sonarqube'
+         SONAR_TOKEN = credentials('sonarqube-token')
     }
     stages {
         stage('Git Checkout') {
@@ -40,11 +41,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube-server') {
-                    sh "${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
+                    sh """
+                        ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
                         -Dsonar.projectKey=jenkins \
                         -Dsonar.sources=./src \
                         -Dsonar.host.url=http://172.17.0.3:9000 \
-                        -Dsonar.login=sonarqube_cred"
+                        -Dsonar.login=${SONAR_TOKEN}
+                     """
                 }
             }
         }
