@@ -18,7 +18,7 @@ pipeline {
             steps {
                 git branch: 'mvn_sonar',
                     credentialsId: 'Github_cred',
-                    url: 'https://github.com/nikitaks97/Maven_repository.git'
+                    url: 'https://github.com/nikitaks97/maven-employee-web-application.git'
             }
         }
         /*stage('Build') {
