@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master',
+                git branch: 'mvn_sonar',
                     credentialsId: 'Github_cred',
                     url: 'https://github.com/nikitaks97/Maven_repository.git'
             }
