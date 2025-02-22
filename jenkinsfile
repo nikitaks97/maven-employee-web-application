@@ -21,11 +21,11 @@ pipeline {
                     url: 'https://github.com/nikitaks97/Maven_repository.git'
             }
         }
-        stage('Build') {
+        /*stage('Build') {
             steps {
                 sh 'mvn clean install -DskipTests --no-transfer-progress  -Denforcer.skip=true'
             }
-        }
+        }*/
         stage('Test') {
             steps {
                 sh 'mvn test --no-transfer-progress  -Denforcer.skip=true'
@@ -33,14 +33,8 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube-server') {
-                    sh """
-                        ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=jenkins \
-                        -Dsonar.java.binaries=target/classes 
-                        #-Dsonar.host.url=${SONAR_HOST_URL} \
-                        #-Dsonar.login=${SONAR_TOKEN}
-                    """
+             sh 'mvn clean install'
+             sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.token=${SONAR_TOKEN}'
                 }
             }
         }
