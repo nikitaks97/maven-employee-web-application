@@ -23,51 +23,41 @@ pipeline {
                 }
             }
         }
-   /*     stage('Run SAST') {
-            steps {
-                sh 'npx eslint.config.js.'
-            }
-        } */
         stage('Build Application') {
             steps {
-                sh 'mvn clean --no-transfer-progress  -Denforcer.skip=true' 
+                sh 'mvn clean --no-transfer-progress -Denforcer.skip=true'
             }
         }
         stage('Run Tests') {
             steps {
-                sh 'mvn test --no-transfer-progress  -Denforcer.skip=true'
+                sh 'mvn test --no-transfer-progress -Denforcer.skip=true'
             }
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv(credentialsId: 'sonarqube-token', installationName: 'sonarqube-server') {
+                withSonarQubeEnv('sonarqube-server') {
                     sh """
                         ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
                         -Dsonar.projectKey=jenkins \
-                        -Dsonar.sources=./src \
-                        -Dsonar.java.binaries=./target \
-                        -Dsonar.exclusions=**/*.java \
-                        -Dsonar.host.url=http://172.17.0.3:9000
+                        -Dsonar.java.binaries=target/classes \
+                        -Dsonar.host.url=http://172.17.0.3:9000 \
+                        -Dsonar.login=${SONAR_TOKEN}
                     """
-                }
-            }
-        }
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
         stage('Package') {
             steps {
-                sh 'mvn package --no-transfer-progress  -Denforcer.skip=true'
+                sh 'mvn package --no-transfer-progress -Denforcer.skip=true'
             }
         }
-    }
-    post {
-        always {
-            echo "Pipeline completed"
+        stage('Quality Gate') {
+            timeout(time: 1, unit: 'HOURS') {
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                }
+            }
         }
     }
 }
