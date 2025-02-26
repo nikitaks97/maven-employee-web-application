@@ -2,9 +2,9 @@ name: Maven employee docker build and push
 
 on:
   push:
-    branches: [ "docker_github" ]
+    branches: [ "github_packages" ]
   pull_request:
-    branches: [ "docker_github" ]
+    branches: [ "github_packages" ]
     
 jobs:
   build:
