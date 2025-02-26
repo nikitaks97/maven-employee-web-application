@@ -29,7 +29,8 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and tag docker image 
-      run: docker build -t employee-service .
+      run: |
+           docker build -t employee-service .
            docker tag employee-service nikitaks997797/employee-service:latest
     - name: Push docker image to docker hub
       run: docker push nikitaks997797/employee-service:latest
