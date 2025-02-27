@@ -48,8 +48,8 @@ jobs:
     - name: 'Build Inventory Image and push to github packages'
       run: |
           docker build -t  empsvc .
-          docker tag empsvc ghcr.io/nikitaks/empsvc:latest
-          docker push ghcr.io/nikitaks/empsvc:latest
+          docker tag empsvc ghcr.io/nikitaks97/empsvc:latest
+          docker push ghcr.io/nikitaks97/empsvc:latest
     
 
 
