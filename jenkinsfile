@@ -19,7 +19,7 @@ pipeline {
             steps {
                 git branch: 'jenkins',
                     url: 'https://github.com/nikitaks97/maven-employee-web-application.git'
-                    credentialsId: "${DOCKERHUB_CREDENTIALS}"
+                    credentialsId: 'Github_cred'
             }
         }
         stage('Maven Build') {
