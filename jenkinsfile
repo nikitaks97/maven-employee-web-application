@@ -1,60 +1,36 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.4-openjdk-17'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
+    
     tools {
         maven 'maven3'
     }
     environment {
-        SONARQUBE_SCANNER_HOME = tool 'sonarqube'
-        SONAR_TOKEN = credentials('sonarqube-token')
-        SONAR_HOST_URL = 'http://172.17.0.3:9000'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub_cred')
     }
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'master',
-                    credentialsId: 'Github_cred',
-                    url: 'https://github.com/nikitaks97/Maven_repository.git'
+                git branch: 'jenkins',
+                    url: 'https://github.com/nikitaks97/maven-employee-web-application.git'
             }
         }
-        stage('Build') {
+        stage('Maven Build') {
             steps {
                 sh 'mvn clean install -DskipTests --no-transfer-progress  -Denforcer.skip=true'
             }
         }
-        stage('Test') {
+        stage('Build Docker Image') {
             steps {
-                sh 'mvn test --no-transfer-progress  -Denforcer.skip=true'
+                sh 'docker build -t jenkinssvc .'
             }
         }
-        stage('SonarQube Analysis') {
+        stage('Push Docker Image') {
             steps {
-                withSonarQubeEnv('sonarqube-server') {
-                    sh """
-                        ${SONARQUBE_SCANNER_HOME}/bin/sonar-scanner \
-                        -Dsonar.projectKey=jenkins \
-                        -Dsonar.java.binaries=target/classes 
-                        #-Dsonar.host.url=${SONAR_HOST_URL} \
-                        #-Dsonar.login=${SONAR_TOKEN}
-                    """
-                }
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push nikitaks97/jenkinssvc'                    
+
             }
         }
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests --no-transfer-progress  -Denforcer.skip=true'
-            }
-        }
+        
     }
 }
