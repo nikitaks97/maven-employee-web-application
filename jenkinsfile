@@ -9,6 +9,12 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub_cred')
     }
     stages {
+        stage('Clean up git lock files') {
+        steps {
+        sh 'rm -f /var/jenkins_home/caches/git-*/.git/config.lock || true'
+            }
+       }
+
         stage('Checkout') {
             steps {
                 git branch: 'jenkins',
