@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Maven Build') {
             steps {
-                sh 'mvn clean install -DskipTests --no-transfer-progress  -Denforcer.skip=true'
+                sh 'mvn clean install -DskipTests --no-transfer-progress -Denforcer.skip=true'
             }
         }
         stage('Build Docker Image') {
@@ -26,11 +26,12 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push nikitaks97/jenkinssvc'                    
-
+                withCredentials([usernamePassword(credentialsId: 'dockerhub_cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker tag jenkinssvc nikitaks97/jenkinssvc:latest'
+                    sh 'docker push nikitaks97/jenkinssvc:latest'
+                }
             }
         }
-        
     }
 }
