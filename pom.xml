@@ -17,10 +17,10 @@
                 <spring.version>5.1.2.RELEASE</spring.version>
                 <junit.version>4.11</junit.version>
                 <log4j.version>1.2.17</log4j.version>
-                <nexus.host.url>http://34.207.142.146:8081</nexus.host.url>
+              <!--  <nexus.host.url>http://34.207.142.146:8081</nexus.host.url> -->
                 <tomcat.host.url>http://3.109.186.189:8080</tomcat.host.url>
-                <sonar.host.url>http://0.0.0.0:9000</sonar.host.url>
-                <sonar.login>YOUR-TOKEN-GOES-HERE</sonar.login>
+               <!-- <sonar.host.url>http://0.0.0.0:9000</sonar.host.url> -->
+              <!--  <sonar.login>YOUR-TOKEN-GOES-HERE</sonar.login> -->
                 <!--
                 <sonar.login>USERNAME</sonar.login>
                 <sonar.password>PASSWORD</sonar.password> -->
@@ -87,19 +87,19 @@
         <repositories>
             <repository>
               <id>maven_emp</id>
-              <url>https://pkgs.dev.azure.com/nikitaks997/github_practice/_packaging/maven_emp/maven/v1</url>
+              <url>http://localhost:8083/repository/maven-repo/</url>
             </repository>
         </repositories>
         <distributionManagement>
                 <repository>
                         <id>maven_emp</id>
                         <name>Nexus Release Repository</name>
-                        <url>https://pkgs.dev.azure.com/nikitaks997/github_practice/_packaging/maven_emp/maven/v1/</url>
+                        <url>http://localhost:8083/repository/maven-repo/</url>
                 </repository>
                 <snapshotRepository>
                         <id>maven_emp</id>
                         <name>Nexus Snapshot Repository</name>
-                        <url>https://pkgs.dev.azure.com/nikitaks997/github_practice/_packaging/maven_emp/maven/v1</url>
+                        <url>http://localhost:8083/repository/maven-repo/</url>
                 </snapshotRepository>
         </distributionManagement>
 

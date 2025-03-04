@@ -5,8 +5,8 @@
   <servers>
     <server>
       <id>maven_emp</id>
-      <username>nikitaks997</username>
-      <password> ${AZURE_DEVOPS_TOKEN}</password>
+      <username>admin</username>
+      <password>devops</password>
     </server>
   </servers>
 </settings>
