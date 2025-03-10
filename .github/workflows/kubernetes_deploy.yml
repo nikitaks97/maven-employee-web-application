@@ -52,18 +52,18 @@ jobs:
       run: |
         mkdir -p $HOME/.kube  # Ensure the .kube directory exists
         echo "${{ secrets.K3S_KUBECONFIG }}" > $HOME/.kube/config
-        kubectl get nodes --insecure-skip-tls-verify  # Verify that K3s is working
+        kubectl get nodes --insecure-skip-tls-verify=true  # Verify that K3s is working
       env:
           JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.14-7/x64
           JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.14-7/x6
 
     - name: Apply Kubernetes Deployment
       run: |
-        kubectl apply -f ./springboot-deployment.yaml --insecure-skip-tls-verify # Path to your Kubernetes deployment YAML file
+        kubectl apply -f ./springboot-deployment.yaml --insecure-skip-tls-verify=true # Path to your Kubernetes deployment YAML file
 
     - name: Expose Spring Boot app (Optional)
       run: |
-        kubectl apply -f ./springboot-nodeprtsvc.yaml --insecure-skip-tls-verify # Path to your Kubernetes service yaml file
+        kubectl apply -f ./springboot-nodeprtsvc.yaml --insecure-skip-tls-verify=true # Path to your Kubernetes service yaml file
     
     
 
