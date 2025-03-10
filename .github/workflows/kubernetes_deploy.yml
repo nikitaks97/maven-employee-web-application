@@ -59,7 +59,7 @@ jobs:
 
     - name: Apply Kubernetes Deployment
       run: |
-        kubectl apply -f ./springboot-deployment.yaml  # Path to your Kubernetes deployment YAML
+        kubectl apply -f ./springboot-deployment.yaml  # Path to your Kubernetes deployment YAML file
 
     - name: Expose Spring Boot app (Optional)
       run: |
