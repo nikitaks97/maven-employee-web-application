@@ -23,14 +23,14 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # Step 3: Check if pom.xml exists
-    - name: Check if pom.xml exists
-      run: ls -l # Verify pom.xml exists
-
-    # Step 4: Build with Maven
-    - name: Build with Maven
-      run: mvn clean package -B -f pom.xml
-
+   # # Step 3: Check if pom.xml exists
+   # - name: Check if pom.xml exists
+   #   run: ls -l # Verify pom.xml exists
+#
+   # # Step 4: Build with Maven
+   # - name: Build with Maven
+   #   run: mvn clean package -B -f pom.xml
+#
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
