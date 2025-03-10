@@ -66,6 +66,7 @@ jobs:
     - name: Expose Spring Boot app (Optional)
       run: |
         kubectl apply -f ./springboot-nodeprtsvc.yaml --insecure-skip-tls-verify=true # Path to your Kubernetes service yaml file
+        kubectl get all --insecure-skip-tls-verify=true
     
     
 
