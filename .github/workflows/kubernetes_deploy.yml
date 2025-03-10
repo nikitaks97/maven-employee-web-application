@@ -5,6 +5,7 @@ on:
     branches: [ "kubernetes" ]
   pull_request:
     branches: [ "kubernetes" ]
+  workflow_dispatch:
     
 jobs:
   build:
