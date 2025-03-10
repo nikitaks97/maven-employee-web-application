@@ -63,7 +63,7 @@ jobs:
 
     - name: Expose Spring Boot app (Optional)
       run: |
-        kubectl apply -f ./springboot-nodeprtsvc.yaml 
+        kubectl apply -f ./springboot-nodeprtsvc.yaml  # Path to your Kubernetes service yaml file
     
     
 
