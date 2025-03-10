@@ -5,7 +5,7 @@ on:
     branches: [ "kubernetes" ]
   pull_request:
     branches: [ "kubernetes" ]
-  workflow_dispatch:
+  workflow_dispatch: # Allows you to run this workflow manually
     
 jobs:
   build:
